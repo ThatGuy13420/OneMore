@@ -67,8 +67,10 @@ namespace River.OneMoreAddIn.Colorizer
 
 			parser = new Parser(Compiler.Compile(language));
 
-			theme = Provider.LoadTheme(
-				Path.Combine(root, $@"Themes\{themeName}-theme.json"), autoOverride);
+			var themePath = Path.Combine(root, $@"Themes\{themeName}-theme.json");
+			var overridePath = Path.Combine(root, "Themes", "Overrides",
+				$"{languageName}-{themeName}.json");
+			theme = Provider.LoadTheme(themePath, autoOverride, overridePath);
 
 			var settings = new SettingsProvider().GetCollection(nameof(ColorizerSheet));
 			if (settings.Get("apply", false))
