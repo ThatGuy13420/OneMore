@@ -1,0 +1,36 @@
+{
+  "colors": {
+    "PSCommand": "#61AFEF",
+    "PSVariable": "#E5C07B",
+    "PSKeyword": "#C678DD",
+    "PSOperator": "#ABB2BF",
+    "PSType": "#56B6C2",
+    "PSAttribute": "#D19A66"
+  },
+  "styles": [
+    {
+      "name": "PowerShellCommand",
+      "foreground": "PSCommand"
+    },
+    {
+      "name": "PowerShellVariable",
+      "foreground": "PSVariable"
+    },
+    {
+      "name": "PowerShellKeyword",
+      "foreground": "PSKeyword"
+    },
+    {
+      "name": "PowerShellOperator",
+      "foreground": "PSOperator"
+    },
+    {
+      "name": "PowerShellType",
+      "foreground": "PSType"
+    },
+    {
+      "name": "PowerShellAttribute",
+      "foreground": "PSAttribute"
+    }
+  ]
+}
