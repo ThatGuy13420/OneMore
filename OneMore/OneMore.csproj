@@ -1954,6 +1954,9 @@
     <None Include="Colorizer\Themes\dark-theme.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Colorizer\Themes\Overrides\powershell-dark.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Colorizer\Themes\light-theme.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
