@@ -94,5 +94,67 @@ namespace River.OneMoreAddIn.Colorizer
 
 			return theme;
 		}
+
+
+		/// <summary>
+		/// Loads a shared theme with an optional, complete-style language override.
+		/// Missing or invalid overrides leave the original shared theme intact.
+		/// </summary>
+		public static ITheme LoadTheme(string path, bool autoOverride, string overridePath)
+		{
+			if (string.IsNullOrWhiteSpace(overridePath) || !File.Exists(overridePath))
+			{
+				return LoadTheme(path, autoOverride);
+			}
+
+			try
+			{
+				var baseLines = File.ReadAllLines(path)
+					.Where(line => !Regex.IsMatch(line, @"^\\s*//"));
+				var theme = JsonConvert.DeserializeObject<Theme>(
+					string.Join(Environment.NewLine, baseLines));
+				var overrideLines = File.ReadAllLines(overridePath)
+					.Where(line => !Regex.IsMatch(line, @"^\\s*//"));
+				var overrides = JsonConvert.DeserializeObject<Theme>(
+					string.Join(Environment.NewLine, overrideLines));
+
+				if (theme?.Colors == null || theme.Styles == null ||
+					overrides?.Styles == null || overrides.Colors == null)
+				{
+					throw new InvalidDataException("Incomplete theme override");
+				}
+
+				// Validate first; an invalid override must not partially modify the base theme.
+				var names = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+				foreach (var style in overrides.Styles)
+				{
+					if (style == null || string.IsNullOrWhiteSpace(style.Name) ||
+						!names.Add(style.Name))
+					{
+						throw new InvalidDataException("Invalid or duplicate override style name");
+					}
+				}
+
+				foreach (var color in overrides.Colors)
+				{
+					theme.Colors[color.Key] = color.Value;
+				}
+
+				foreach (var style in overrides.Styles)
+				{
+					theme.Styles.RemoveAll(s => string.Equals(
+						s.Name, style.Name, StringComparison.OrdinalIgnoreCase));
+					theme.Styles.Add(style);
+				}
+
+				theme.TranslateColorNames(autoOverride);
+				return theme;
+			}
+			catch (Exception exc)
+			{
+				Logger.Current.WriteLine($"error loading theme override {overridePath}", exc);
+				return LoadTheme(path, autoOverride);
+			}
+		}
 	}
 }
